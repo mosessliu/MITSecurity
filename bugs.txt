@@ -1,0 +1,43 @@
+#
+# [file:#lines]
+# desc
+#
+
+[zookd.c:70]
+The buffer reqpath is size 2048. We can send a long uri to attack it.
+
+    if ((errmsg = http_request_line(fd, reqpath, env, &env_len)))
+
+[http.c:23]
+The buffer length of pn is 1024. snprintf is hard coded to take a buffer of size 1024. Stuff pn with more than 1024 bytes. 
+
+    char pn[1024];
+    snprintf(pn, 1024, "/tmp/%s", name);
+
+[http.c:23]
+The buffer length of pn is 1024. Snprintf is hard coded to take a buffer of size 1024. Stuff pn with more than 1024 bytes. 
+
+    char pn[1024];
+    snprintf(pn, 1024, "/tmp/%s", name);
+
+[http.c:165]
+The size of envvar is 512, so we can add a long string start with HTTP_ in header, and springf will write it to buffer envvar. Stack of function "const char *http_request_headers(int fd)" will be smashed.
+	
+	sprintf(envvar, "HTTP_%s", buf);
+
+
+[http.c:311]
+The size of buf is 1024. Because snprintf is hard coded for a buffer of 1024, if we buf is actually filled with more than 1024 bytes, it snprintf will be smashed. 
+
+    char buf[1024];
+    snprintf(buf, 1024, "%s%s", pn, getenv("PATH_INFO"));
+
+[http.c:282]
+Buffer of pn is 1024, but name can be passed via getenv("REQUEST_URI"); So, we can send a long request URI, and in http.c, this concatenation
+will smash the stack of http_serve
+	
+    Function: http_serve:    strcat(pn, name);
+	
+	
+
+

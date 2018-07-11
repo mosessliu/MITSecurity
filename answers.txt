@@ -1,0 +1,5 @@
+## Place your answers here.
+Exercise 2
+====================================================
+2a will overflow reqpath[2048]
+2b will overflow pn, to rewrite funcion pointer
