@@ -77,7 +77,6 @@ const char *http_request_line(int fd, char *reqpath, char *env, size_t *env_len)
     if (!sp1)
         return "Cannot parse HTTP request (1)";
     *sp1 = '\0';
-    printf(sp1);
     sp1++;
     if (*sp1 != '/')
         return "Bad request path";
