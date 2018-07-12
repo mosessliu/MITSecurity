@@ -65,7 +65,7 @@ static void process_client(int fd)
     char reqpath[2048];
     const char *errmsg;
     int i;
-
+    
     /* get the request line */
     if ((errmsg = http_request_line(fd, reqpath, env, &env_len)))
         return http_err(fd, 500, "http_request_line: %s", errmsg);
